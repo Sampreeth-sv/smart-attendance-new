@@ -1,34 +1,44 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from utils.db import init_db
-from routes import auth_routes, attendance_routes, qr_routes, facial_routes, location_routes, face_registration_routes
 
-app = FastAPI()
+# 🧩 Import all route modules
+from routes import (
+    auth_routes,
+    attendance_routes,
+    facial_routes,
+    qr_routes,
+    location_routes,
+    face_registration_routes,
+    teacher_override_routes
+)
 
-# Enable CORS for frontend
+# 🧱 Initialize FastAPI app
+app = FastAPI(title="Smart Attendance System")
+
+# 🌍 CORS Setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Vite default port
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Initialize database
-init_db()
+# 📦 Register routers
+app.include_router(auth_routes.router, prefix="/auth", tags=["Auth"])
+app.include_router(attendance_routes.router, prefix="/attendance", tags=["Attendance"])
+app.include_router(facial_routes.router, prefix="/facial", tags=["Facial Recognition"])
+app.include_router(qr_routes.router, prefix="/qr", tags=["QR"])
+app.include_router(location_routes.router, prefix="/location", tags=["Location"])
+app.include_router(face_registration_routes.router, prefix="/face-registration", tags=["Face Registration"])
+app.include_router(teacher_override_routes.router, prefix="/teacher", tags=["Teacher Override"])
 
-# Register routes
-app.include_router(auth_routes.router, prefix="/auth", tags=["auth"])
-app.include_router(attendance_routes.router, prefix="/attendance", tags=["attendance"])
-app.include_router(qr_routes.router, prefix="/qr", tags=["qr"])
-app.include_router(facial_routes.router, prefix="/facial", tags=["facial"])
-app.include_router(location_routes.router, prefix="/location", tags=["location"])
-app.include_router(face_registration_routes.router, prefix="/face", tags=["face-registration"])  # NEW LINE
-
+# 🏁 Root endpoint
 @app.get("/")
-def read_root():
-    return {"message": "Smart Attendance API is running"}
+def home():
+    return {"message": "Smart Attendance Backend Running ✅"}
 
+# 🔥 Run app (for local debugging)
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=5000)
