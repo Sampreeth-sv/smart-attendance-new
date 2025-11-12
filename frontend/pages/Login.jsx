@@ -2,7 +2,7 @@ import { useState } from "react";
 
 function Login({ onLogin, error }) {
   const [role, setRole] = useState("student");
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -10,8 +10,14 @@ function Login({ onLogin, error }) {
     e.preventDefault();
 
     // Validate inputs
-    if (!username.trim()) {
-      alert("Please enter your username");
+    if (!email.trim()) {
+      alert("Please enter your email");
+      return;
+    }
+
+    // Optional: Email format validation (simple)
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      alert("Please enter a valid email address");
       return;
     }
 
@@ -24,7 +30,7 @@ function Login({ onLogin, error }) {
     setIsLoading(true);
 
     // Call the login handler from App.jsx
-    await onLogin(username, password, role);
+    await onLogin(email, password, role);
 
     // Reset loading state
     setIsLoading(false);
@@ -54,13 +60,13 @@ function Login({ onLogin, error }) {
           </div>
 
           <div className="form-group">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="email">Email</label>
             <input
-              id="username"
-              type="text"
-              placeholder="Enter your username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              id="email"
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="form-control"
               disabled={isLoading}
               required
@@ -91,7 +97,7 @@ function Login({ onLogin, error }) {
         </form>
 
         <div className="login-info">
-          <p>💡 Use your credentials to access the system</p>
+          <p>💡 Use your email to access the system</p>
         </div>
       </div>
     </div>
