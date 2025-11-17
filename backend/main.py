@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-# 🧩 Import all route modules
+# Import Routers
 from routes import (
     auth_routes,
     attendance_routes,
@@ -12,10 +12,10 @@ from routes import (
     teacher_override_routes
 )
 
-# 🧱 Initialize FastAPI app
+# Initialize FastAPI
 app = FastAPI(title="Smart Attendance System")
 
-# 🌍 CORS Setup
+# CORS Setup
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -24,7 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 📦 Register routers
+# Register All Routers
 app.include_router(auth_routes.router, prefix="/auth", tags=["Auth"])
 app.include_router(attendance_routes.router, prefix="/attendance", tags=["Attendance"])
 app.include_router(facial_routes.router, prefix="/facial", tags=["Facial Recognition"])
@@ -33,12 +33,12 @@ app.include_router(location_routes.router, prefix="/location", tags=["Location"]
 app.include_router(face_registration_routes.router, prefix="/face-registration", tags=["Face Registration"])
 app.include_router(teacher_override_routes.router, prefix="/teacher", tags=["Teacher Override"])
 
-# 🏁 Root endpoint
+# Root Endpoint
 @app.get("/")
 def home():
     return {"message": "Smart Attendance Backend Running ✅"}
 
-# 🔥 Run app (for local debugging)
+# Run App (Local)
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=5000)
